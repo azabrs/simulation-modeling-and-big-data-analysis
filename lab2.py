@@ -1,17 +1,36 @@
 import numpy as np
 import pandas as pd
-array = np.sqrt(np.linspace(0,10,50,endpoint=False))[48::-2]#inverted array of length 50, in which every second element remains
-array_2 = np.vstack((array,np.logspace(0,1,25,base=2)))#matrix with extra row
-array_3 = np.apply_along_axis(lambda x: np.prod(x)**(1/x.size), 0, array_2)#geometric mean
-a=np.mean(array_3)# arithmetic mean of geometric mean 
-array_4 = np.array([])
-for i in np.linspace(-3,3,1000):
-  array_4 = np.append(array_4,np.sinc(i)) if array_4 is not None else np.array(i)
+tabl=pd.DataFrame([["fruit","red",45,60,120],
+["fruit","yellow",45,32,100],
+["fruit","orange",60,45,50],
+["fruit","orange",75,21,70],
+["fruit","green",45,40,170],
+["fruit","peach colour",45,35,130],
+["vegetable","brown",45,30,90],
+["vegetable","orange",20,16,110],
+["vegetable","yellow",30,24,150],
+["vegetable","green",120,80,220]],
+columns=["type","collor","weight","size","price"],
+index=["apple", "banana", "orange", "tangerine", "pear", "peach", "potato", "carrot", "onion", "cabbage"])
 
-mean_arr = np.mean(array_4)
-max_arr = max(array_4)
-min_arr = min(array_4)
-sko_arr = np.std(array_4)
-med_arr = np.median(array_4)
-print("Mean = {}\tMax = {}\tMin = {}\tStd = {}\tMedian = {}".format(mean_arr,max_arr,min_arr,sko_arr,med_arr))
+print(tabl.tail(4))
+print(tabl.info())
+
+print(tabl[(tabl["size"]  > tabl['size']['potato']) & (tabl["type"]=="fruit") ])
+print(tabl[(tabl["weight"] > tabl["weight"]["banana"]) & (tabl["type"]=="fruit")]["price"].mean())
+
+mean=0;
+fruct=tabl[tabl["type"] == "fruit"]
+for v,k in fruct.iterrows():
+    mean+=k["price"]
+
+mean=mean/fruct.shape[0]
+print(mean)
+
+tabl2=pd.DataFrame({"Min":tabl.min()[2:], "Max":tabl.max()[2:], "Mean":tabl.mean(), "Median":tabl.median()})
+print(tabl2)
+tabl3=tabl.agg([np.min, np.max,np.mean,np.median]).iloc[:,2:5]
+print(tabl3)
+print(tabl.groupby("collor").mean().iloc[:,[0,2]])
+print(tabl.groupby("collor").max().iloc[:,[1,3]])
 
